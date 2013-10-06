@@ -1,0 +1,66 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>KISSY时间线组件</title>
+    <script src="http://a.tbcdn.cn/s/kissy/1.3.0/kissy-min.js" charset="utf-8"></script>
+    <style>
+    body {margin: 0;padding: 0;}
+    .tl-main {
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        height: 200px;
+    }
+    </style>
+</head>
+<body>
+<h2>KISSY时间线组件</h2>
+
+<div id="TL-Main" class="TL-Container tl-main"></div>
+
+<script>
+    var S = KISSY;
+    S.Config.debug = true;
+    if (S.Config.debug) {
+        var srcPath = "../../../";
+        S.config({
+            packages:[
+                {
+                    name:"gallery",
+                    path:srcPath,
+                    charset:"utf-8",
+                    ignorePackageNameInUri:true
+                }
+            ]
+        });
+    }
+
+    function fillDoub(num) {
+        return num < 10 ? "0" + num : num;
+    }
+
+    var chars = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    var len = chars.length;
+    var max = len - 15;
+    var arr = [];
+    for (var i = 0; i < 15; i++) {
+        arr.push({
+            date: "2013/" + fillDoub(Math.round(Math.random() * 11) + 1) + "/" + fillDoub(Math.round(Math.random() * 27) + 1),
+            title: chars.substr(Math.round(Math.random() * max), Math.round(Math.random() * 14) + 1),
+            icon: "http://lorempixel.com/32/32/nature/" + Math.round(Math.random() * 9 + 1) + "/"
+        });
+    }
+
+    S.use('gallery/timeline/1.0/index,gallery/timeline/1.0/index.css', function (S, Timeline) {
+        var tl = new Timeline("#TL-Main", {
+            scale: 1.5
+        });
+        tl.render({
+            "pluginTitle": "2013大事记",
+            events: arr
+        });
+    })
+</script>
+</body>
+</html>
