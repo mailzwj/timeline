@@ -16,9 +16,9 @@
 
 * @param ctn{id|class|node}：组件渲染显示的节点
 * @param cfg{object}：组件配置选项
-	@property scale{int|float} 组件横向放大倍数，取值范围[0.5, 5]，基数：每月100px
-	@property enlarge{id|class|node} 组件放大控制器
-	@property narrow{id|class|node} 组件缩小控制器
+	- @property scale{int|float} 组件横向放大倍数，取值范围[0.5, 5]，基数：每月100px
+	- @property enlarge{id|class|node} 组件放大控制器
+	- @property narrow{id|class|node} 组件缩小控制器
 * **注：**每次放大/缩小的步长为0.5
 	
 	```
