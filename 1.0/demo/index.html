@@ -11,13 +11,37 @@
         bottom: 0;
         width: 100%;
         height: 200px;
+        z-index: 10000;
+    }
+    .tl-btn {
+        margin: 0 0 0 30px;
+        width: 60px;
+        height: 30px;
+        text-align: center;
+        line-height: 30px;
+        font-size: 20px;
+        font-weight: bold;
+    }
+    .box {
+        margin: 0 auto;
+        padding-top: 120px;
+        width: 600px;
+        overflow: hidden;
+    }
+    .tl-demo {
+        width: 600px;
+        height: 200px;
     }
     </style>
 </head>
 <body>
 <h2>KISSY时间线组件</h2>
 
+<input type="button" value="+" id="TL-Enlarge" title="放大" class="tl-btn">
+<input type="button" value="-" id="TL-Narrow" title="缩小" class="tl-btn">
+
 <div id="TL-Main" class="TL-Container tl-main"></div>
+<div class="box"><div id="TL-Demo" class="tl-demo" style="background-color: #000;"></div></div>
 
 <script>
     var S = KISSY;
@@ -42,22 +66,35 @@
 
     var chars = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     var len = chars.length;
-    var max = len - 15;
+    var max = len - 30;
     var arr = [];
     for (var i = 0; i < 15; i++) {
+        var date = "2013/" + fillDoub(Math.round(Math.random() * 11) + 1) + "/" + fillDoub(Math.round(Math.random() * 27) + 1);
+        var title = chars.substr(Math.round(Math.random() * max), Math.round(Math.random() * 29) + 1);
         arr.push({
-            date: "2013/" + fillDoub(Math.round(Math.random() * 11) + 1) + "/" + fillDoub(Math.round(Math.random() * 27) + 1),
-            title: chars.substr(Math.round(Math.random() * max), Math.round(Math.random() * 14) + 1),
-            icon: "http://lorempixel.com/32/32/nature/" + Math.round(Math.random() * 9 + 1) + "/"
+            date: date,
+            title: title,
+            icon: "http://lorempixel.com/24/24/nature/" + Math.round(Math.random() * 9 + 1) + "/",
+            detail: date + "，" + title + title
         });
     }
 
     S.use('gallery/timeline/1.0/index,gallery/timeline/1.0/index.css', function (S, Timeline) {
         var tl = new Timeline("#TL-Main", {
-            scale: 1.5
+            scale: 1.5,
+            enlarge: "#TL-Enlarge",
+            narrow: "#TL-Narrow"
         });
         tl.render({
             "pluginTitle": "2013大事记",
+            events: arr
+        });
+
+        var demo = new Timeline("#TL-Demo", {
+            scale: 1
+        });
+        demo.render({
+            pluginTitle: "时间线DEMO",
             events: arr
         });
     })

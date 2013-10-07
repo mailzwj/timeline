@@ -20,7 +20,9 @@ KISSY.add('gallery/timeline/1.0/index',function (S, Node, Base) {
      */
 
     var _default = {
-        scale: 2
+        scale: 2,
+        enlarge: ".TL-Enlarge",
+        narrow: ".TL-Narrow"
     };
 
     function Timeline(cnt, cfg) {
@@ -30,6 +32,8 @@ KISSY.add('gallery/timeline/1.0/index',function (S, Node, Base) {
         }
         self.container = S.one(cnt);
         self.cfg = S.merge({}, _default, cfg);
+        self.set("enlarge", S.one(self.cfg.enlarge));
+        self.set("narrow", S.one(self.cfg.narrow));
         self.set("totalMonth", 12);
         self.init();
         //调用父类构造函数
@@ -45,37 +49,47 @@ KISSY.add('gallery/timeline/1.0/index',function (S, Node, Base) {
             var eventBox = S.one('<div class="TL-EventBox tl-eventbox"></div>');
             self.set("centerLine", centerLine);
             self.set("eventBox", eventBox);
+            if (self.cfg.scale < 0.5) {
+                self.cfg.scale = 0.5;
+            } else if (self.cfg.scale > 5) {
+                self.cfg.scale = 5;
+            }
             self.set("space", 100 * self.cfg.scale);
-            style.overflow = "hidden";
+            self.set("rows", [12, 59, 106]);
+            // style.overflow = "hidden";
             style.cursor = "move";
             style[us] = "none";
             self.container.css(style);
             if (self.container.css("position") === "static") {
                 self.container.css("position", "relative");
             }
+            self.container.addClass("TL-Container");
             self.container.append(centerLine);
             self.container.append(eventBox);
             self._createTimeLine();
             self._resizeListBox();
             self._enableDrag();
-            // self.slideToMonth(new Date().getMonth() + 1);
-            self.slideToMonth(5);
+            self._delegate();
+            self._enableZoom();
+            self.slideToMonth(new Date().getMonth() + 1);
+            // self.slideToMonth(5);
         },
         render: function(json) {
             var self = this;
             var eb = self.get("eventBox");
             var lb = eb.one(".TL-ListBox");
-            var item = '<div class="TL-Items tl-items" data-date="{{date}}">'
+            var item = '<div class="TL-Items tl-items" data-date="{{date}}" data-detail="{{detail}}">'
                 + '<div class="tl-wrap">'
                 + '<img src="{{icon}}" class="tl-icon">'
                 + '<div class="tl-content">'
-                + '<div class="tl-title">{{title}}</div>'
+                + '<div class="tl-title" title="{{title}}">{{title}}</div>'
                 + '</div>'
                 + '<span class="tl-arrow"></span>'
                 + '</div>'
                 + '</div>';
             var data = [];
             var list = [];
+            self.set("data", json);
             if (json && json.events) {
                 data = json.events;
             }
@@ -89,8 +103,21 @@ KISSY.add('gallery/timeline/1.0/index',function (S, Node, Base) {
         setPosition: function() {
             var self = this;
             var items = self.get("items");
+            var lists = [];
+            self.set("itemWidth", S.one(items[0]).one(".tl-wrap").outerWidth());
+            self.set("rowRight", [0, 0, 0]);
             items.each(function(n, i){
-                n.css({"left": Math.round(Math.random() * 1800), "top": 0});
+                lists.push(n);
+            });
+            lists.sort(function(a, b){
+                var aDate = new Date(a.attr("data-date")).getTime();
+                var bDate = new Date(b.attr("data-date")).getTime();
+                return aDate - bDate;
+            });
+            // console.log(lists);
+            S.each(lists, function(n, i){
+                // n.css({"left": Math.round(Math.random() * 1800), "top": 0});
+                self._writeStyle(n);
             });
         },
         fillDoub: function(num) {
@@ -113,9 +140,139 @@ KISSY.add('gallery/timeline/1.0/index',function (S, Node, Base) {
                 eb.animate({"left": dest}, 0.2, "easeOut", function(){});
             }
         },
+        slideToItem: function(item) {
+            var self = this;
+            var cl = self.get("centerLine");
+            var eb = self.get("eventBox");
+            var cLeft = parseFloat(cl.css("left"));
+            var iLeft = parseFloat(item.css("left"));
+            eb.animate({"left": cLeft - iLeft}, 0.2, "easeOut", function(){});
+        },
+        getMinRight: function(arr) {
+            var min = arr[0], l = 0;
+            for (var i = 1, len = arr.length; i < len; i++) {
+                if (min > arr[i]) {
+                    min = arr[i];
+                    l = i;
+                }
+            }
+            return l;
+        },
+        _enableZoom: function() {
+            var self = this;
+            var en = self.get("enlarge");
+            var na = self.get("narrow");
+            if (en) {
+                en.on("click", function(e){
+                    self.cfg.scale += 0.5;
+                    if (self.cfg.scale > 5) {
+                        self.cfg.scale = 5;
+                    }
+                    self.set("space", self.cfg.scale * 100);
+                    self.get("eventBox").html("");
+                    self._createTimeLine();
+                    self._resizeListBox();
+                    self.render(self.get("data"));
+                    self.slideToMonth(new Date().getMonth() + 1);
+                });
+            }
+            if (na) {
+                na.on("click", function(e){
+                    self.cfg.scale -= 0.5;
+                    if (self.cfg.scale < 0.5) {
+                        self.cfg.scale = 0.5;
+                    }
+                    self.set("space", self.cfg.scale * 100);
+                    self.get("eventBox").html("");
+                    self._createTimeLine();
+                    self._resizeListBox();
+                    self.render(self.get("data"));
+                    self.slideToMonth(new Date().getMonth() + 1);
+                });
+            }
+        },
+        _delegate: function() {
+            var self = this;
+            self.get("eventBox").delegate("click", ".tl-wrap", function(e){
+                e.halt();
+                var target = S.one(e.target).parent(".TL-Items");
+                var cn = self.get("currentNode");
+                var body = target.one(".tl-detail");
+                if (cn) {
+                    cn.removeClass("tl-active");
+                }
+                if (!body) {
+                    body = S.one('<div class="tl-detail">');
+                    target.one(".tl-content").append(body);
+                }
+                body.html(target.attr("data-detail"));
+                target.addClass("tl-active");
+                self.slideToItem(target);
+                self.set("currentNode", target);
+            });
+            S.one(document).on("click", function(e){
+                var cn = self.get("currentNode");
+                if (cn) {
+                    cn.removeClass("tl-active");
+                }
+            });
+        },
+        _getLeft: function(date) {
+            var self = this;
+            var datePercent = 0, left = 0;
+            var year = date.getFullYear();
+            var month = date.getMonth();
+            var day = date.getDate();
+            var space = self.get("space");
+            var thisMonth = new Date(year, month, 1);
+            if (month === 11) {
+                month = 0;
+                year = parseInt(year) + 1;
+            } else {
+                month = parseInt(month) + 1;
+            }
+            var nextMonth = new Date(year, month, 1);
+            var wholeMonth = parseInt((nextMonth - thisMonth) / (24 * 60 * 60 * 1000));
+            datePercent = day / wholeMonth;
+            left = date.getMonth() * space + space * datePercent;
+            return left;
+        },
+        _getBottom: function(num) {
+            var self = this;
+            var rows = self.get("rows");
+            var rr = self.get("rowRight");
+            var iw = self.get("itemWidth");
+            var row = -1;
+            for (var i = 0, len = rr.length; i < len; i++) {
+                if (num - rr[i] > 0) {
+                    row = i;
+                    break;
+                }
+            }
+            if (row === -1) {
+                row = self.getMinRight(rr);
+            }
+            rr[row] = num + iw;
+            self.set("rowRight", rr);
+            return rows[row];
+        },
+        _writeStyle: function(n) {
+            var self = this;
+            var date = new Date(n.attr("data-date"));
+            var left = self._getLeft(date);
+            var bottom = self._getBottom(left);
+            n.css({left: left, top: 0});
+            n.one(".tl-wrap").css("bottom", bottom);
+        },
         _getHtml: function(tpl, data) {
-            for (var n in data) {
-                tpl = tpl.replace(new RegExp("\{\{" + n + "\}\}", "g"), data[n]);
+            var reg = /\{\{([\w\-_]+)\}\}/;
+            while(reg.test(tpl)) {
+                var index = RegExp.$1;
+                if (!data[index]) {
+                    data[index] = "";
+                }
+                tpl = tpl.replace(reg, data[index]);
+                reg.lastIndex = 0;
             }
             return tpl;
         },
