@@ -60,6 +60,11 @@
 	- `detail`字段，该记录的详细内容，点击每个小标签的时候显示，字数不宜过多
 	- `icon`字段，每个小标签左侧的缩略图
 	- `title`字段，小标签的标题，必选（为空太难看）
+* `setPosition()`：重设小标签的位置
+	
+	```
+	tl.setPosition();
+	```
 * `slideToMonth(mon)`：滑动时间线至指定月份
 
 	```
@@ -120,6 +125,11 @@ S.use('gallery/timeline/1.0/index,gallery/timeline/1.0/index.css', function (S, 
 ```
 
 ## changelog
+
+### 2013/10/08
+
+* 重写放大/缩小功能
+* 补充文档
 
 ### 2013/10/07
 

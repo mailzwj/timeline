@@ -16,7 +16,8 @@ KISSY.add(function (S, Node, Base) {
     var _default = {
         scale: 2,
         enlarge: ".TL-Enlarge",
-        narrow: ".TL-Narrow"
+        narrow: ".TL-Narrow",
+        month: new Date().getMonth() + 1
     };
 
     function Timeline(cnt, cfg) {
@@ -65,7 +66,7 @@ KISSY.add(function (S, Node, Base) {
             self._enableDrag();
             self._delegate();
             self._enableZoom();
-            self.slideToMonth(new Date().getMonth() + 1);
+            self.slideToMonth(self.cfg.month);
             // self.slideToMonth(5);
         },
         render: function(json) {
@@ -163,11 +164,12 @@ KISSY.add(function (S, Node, Base) {
                         self.cfg.scale = 5;
                     }
                     self.set("space", self.cfg.scale * 100);
-                    self.get("eventBox").html("");
+                    self.get("eventBox").one(".TL-TimeLine").remove();
                     self._createTimeLine();
                     self._resizeListBox();
-                    self.render(self.get("data"));
-                    self.slideToMonth(new Date().getMonth() + 1);
+                    self.setPosition();
+                    // self.render(self.get("data"));
+                    self.slideToMonth(self.cfg.month);
                 });
             }
             if (na) {
@@ -177,11 +179,12 @@ KISSY.add(function (S, Node, Base) {
                         self.cfg.scale = 0.5;
                     }
                     self.set("space", self.cfg.scale * 100);
-                    self.get("eventBox").html("");
+                    self.get("eventBox").one(".TL-TimeLine").remove();
                     self._createTimeLine();
                     self._resizeListBox();
-                    self.render(self.get("data"));
-                    self.slideToMonth(new Date().getMonth() + 1);
+                    self.setPosition();
+                    // self.render(self.get("data"));
+                    self.slideToMonth(self.cfg.month);
                 });
             }
         },
