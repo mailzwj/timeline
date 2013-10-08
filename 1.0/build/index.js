@@ -1,7 +1,7 @@
 /*
 combined files : 
 
-gallery/timeline/1.0/index
+gallery/yearline/1.0/index
 
 */
 /**
@@ -9,7 +9,7 @@ gallery/timeline/1.0/index
  * @author Letao<mailzwj@126.com>
  * @module timeline
  **/
-KISSY.add('gallery/timeline/1.0/index',function (S, Node, Base) {
+KISSY.add('gallery/yearline/1.0/index',function (S, Node, Base) {
     var EMPTY = '';
     var $ = Node.all;
     /**
