@@ -128,8 +128,9 @@ KISSY.add('gallery/timeline/1.0/index',function (S, Node, Base) {
             var self = this;
             var dest = 0;
             var singleLen = self.get("space");
-            var cl = self.get("centerLine");
-            var cLeft = parseFloat(cl.css("left"));
+            // var cl = self.get("centerLine");
+            // var cLeft = parseFloat(cl.css("left"));
+            var cLeft = self.container.width() / 2;
             var eb = self.get("eventBox");
             mon = parseInt(mon) - 1;
             if (isNaN(mon)) {
@@ -143,9 +144,10 @@ KISSY.add('gallery/timeline/1.0/index',function (S, Node, Base) {
         },
         slideToItem: function(item) {
             var self = this;
-            var cl = self.get("centerLine");
+            // var cl = self.get("centerLine");
             var eb = self.get("eventBox");
-            var cLeft = parseFloat(cl.css("left"));
+            // var cLeft = parseFloat(cl.css("left"));
+            var cLeft = self.container.width() / 2;
             var iLeft = parseFloat(item.css("left"));
             eb.animate({"left": cLeft - iLeft}, 0.2, "easeOut", function(){});
         },
@@ -349,8 +351,9 @@ KISSY.add('gallery/timeline/1.0/index',function (S, Node, Base) {
         },
         _rebound: function(node, num) {
             var self = this;
-            var cl = self.get("centerLine");
-            var cLeft = parseFloat(cl.css("left"));
+            // var cl = self.get("centerLine");
+            // var cLeft = parseFloat(cl.css("left"));
+            var cLeft = self.container.width() / 2;
             var dw = node.width();
             if (num > cLeft) {
                 node.animate({"left": cLeft}, 0.2, "easeOut", function(){});
