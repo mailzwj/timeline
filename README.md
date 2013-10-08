@@ -1,4 +1,4 @@
-## timeline
+## yearline
 
 * 版本：1.0
 * 教程：[http://gallery.kissyui.com/yearline/1.0/guide/index.html](http://gallery.kissyui.com/yearline/1.0/guide/index.html)
@@ -10,6 +10,7 @@
 * 时间线只显示开始和半月刻度
 * 组件支持【拖动定位】、【点击定位】、【指定月份定位】、【放大/缩小】等功能
 * 组件参考[Tutorialzine](http://tutorialzine.com/2012/04/timeline-portfolio/)的样式，但功能几乎完全改写
+
     ![Timeline](http://www.seejs.com/wp-content/uploads/2013/10/timeline.png)
 
 ## 组件参数
