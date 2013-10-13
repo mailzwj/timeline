@@ -69,7 +69,7 @@
     var max = len - 30;
     var arr = [];
     for (var i = 0; i < 15; i++) {
-        var date = "2013/" + fillDoub(Math.round(Math.random() * 11) + 1) + "/" + fillDoub(Math.round(Math.random() * 27) + 1);
+        var date = fillDoub(Math.round(Math.random() * 11) + 1) + "/" + fillDoub(Math.round(Math.random() * 27) + 1);
         var title = chars.substr(Math.round(Math.random() * max), Math.round(Math.random() * 29) + 1);
         arr.push({
             date: date,
@@ -86,8 +86,10 @@
             narrow: "#TL-Narrow",
             month: 6
         });
+
         tl.render({
-            "pluginTitle": "2013大事记",
+            "pluginTitle": "2012大事记",
+            year: "2012",
             events: arr
         });
 
@@ -96,6 +98,7 @@
         });
         demo.render({
             pluginTitle: "时间线DEMO",
+            // year: "2013",
             events: arr
         });
     })

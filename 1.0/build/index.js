@@ -1,7 +1,7 @@
 /*
 combined files : 
 
-gallery/yearline/1.0/index
+1.0/index
 
 */
 /**
@@ -9,7 +9,7 @@ gallery/yearline/1.0/index
  * @author Letao<mailzwj@126.com>
  * @module timeline
  **/
-KISSY.add('gallery/yearline/1.0/index',function (S, Node, Base) {
+KISSY.add('1.0/index',function (S, Node, Base) {
     var EMPTY = '';
     var $ = Node.all;
     /**
@@ -79,6 +79,7 @@ KISSY.add('gallery/yearline/1.0/index',function (S, Node, Base) {
             var self = this;
             var eb = self.get("eventBox");
             var lb = eb.one(".TL-ListBox");
+            var oData = S.clone(json);
             var item = '<div class="TL-Items tl-items" data-date="{{date}}" data-detail="{{detail}}">'
                 + '<div class="tl-wrap">'
                 + '<img src="{{icon}}" class="tl-icon">'
@@ -90,13 +91,15 @@ KISSY.add('gallery/yearline/1.0/index',function (S, Node, Base) {
                 + '</div>';
             var data = [];
             var list = [];
-            self.set("data", json);
-            if (json && json.events) {
-                data = json.events;
+            if (oData && oData.events) {
+                data = oData.events;
             }
             S.each(data, function(d, i){
+                d.date = (oData.year || new Date().getFullYear()) + "/" + d.date;
+                oData.events[i].date = d.date;
                 list.push(self._getHtml(S.clone(item), d));
             });
+            self.set("data", oData);
             lb.html(list.join(""));
             self.set("items", lb.all(".TL-Items"));
             self.setPosition();
