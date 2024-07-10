@@ -1,8 +1,8 @@
 ## yearline
 
 * 版本：1.0
-* 教程：[http://gallery.kissyui.com/yearline/1.0/guide/index.html](http://gallery.kissyui.com/yearline/1.0/guide/index.html)
-* demo：[http://gallery.kissyui.com/yearline/1.0/demo/index.html](http://gallery.kissyui.com/yearline/1.0/demo/index.html)
+* 教程：[https://mailzwj.github.io/timeline/1.0/guide/index.html](https://mailzwj.github.io/timeline/1.0/guide/index.html)
+* demo：[https://mailzwj.github.io/timeline/1.0/demo/index.html](https://mailzwj.github.io/timeline/1.0/demo/index.html)
 
 ## 组件说明
 
