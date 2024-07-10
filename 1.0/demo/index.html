@@ -47,7 +47,7 @@
     var S = KISSY;
     S.Config.debug = true;
     if (S.Config.debug) {
-        var srcPath = "../";
+        var srcPath = "../../../";
         S.config({
             packages:[
                 {
@@ -79,7 +79,7 @@
         });
     }
 
-    S.use('timeline/1.0/index,timeline/1.0/index.css', function (S, Timeline) {
+    S.use('gallery/yearline/1.0/index,gallery/yearline/1.0/index.css', function (S, Timeline) {
         var tl = new Timeline("#TL-Main", {
             scale: 1.5,
             enlarge: "#TL-Enlarge",
